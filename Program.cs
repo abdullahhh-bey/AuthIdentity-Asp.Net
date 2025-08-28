@@ -6,6 +6,7 @@ using System.Text;
 using UserAuthManagement.Data;
 using UserAuthManagement.Modals;
 using UserAuthManagement.Roles;
+using UserAuthManagement.Services;
 using YourApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -64,6 +65,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddScoped<StudentService, StudentService>();
 
 
 var app = builder.Build();

@@ -7,6 +7,7 @@ using UserAuthManagement.DTO;
 using UserAuthManagement.Modals;
 using UserAuthManagement.Roles;
 using YourApi.Services;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UserAuthManagement.Controllers
 {
@@ -42,7 +43,10 @@ namespace UserAuthManagement.Controllers
             var result = await _usermanager.CreateAsync(user, dto.Password);
 
             if (!result.Succeeded)
-                return BadRequest("Error Occured in Response");
+            {
+                var errors = result.Errors.Select(e => e.Description);
+                return BadRequest(new { Errors = errors });
+            }
 
             await _usermanager.AddToRoleAsync(user, dto.Role);
             return Ok("Registered Successfully");
