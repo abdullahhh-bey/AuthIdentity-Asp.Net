@@ -61,6 +61,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddAuthorization();
 
@@ -72,8 +73,9 @@ var app = builder.Build();
 // Program.cs (after var app = builder.Build(); and before app.Run();)
 await SeedRolesAsync(app);
 
+//Hello
 static async Task SeedRolesAsync(WebApplication app)
-{
+{ 
     using var scope = app.Services.CreateScope();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 

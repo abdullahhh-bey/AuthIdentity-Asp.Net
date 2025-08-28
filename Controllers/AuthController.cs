@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,16 +14,17 @@ namespace UserAuthManagement.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-
+        private readonly IMapper _mapper;
         private readonly UserManager<User> _usermanager;
         private readonly JwtService _jwtservice;
         private readonly RoleManager<IdentityRole> _rolemanager;
 
-        public AuthController(UserManager<User> usermanager, JwtService jwtservice, RoleManager<IdentityRole> rolemanager)
+        public AuthController(UserManager<User> usermanager, JwtService jwtservice, RoleManager<IdentityRole> rolemanager, IMapper mapper)
         {
             _usermanager = usermanager;
             _jwtservice = jwtservice;
             _rolemanager = rolemanager;
+            _mapper = mapper;
         }
 
 
@@ -35,12 +37,7 @@ namespace UserAuthManagement.Controllers
                 return BadRequest("Invalid Role");
             }
 
-            var user = new User
-            {
-                UserName = dto.Email,
-                Email = dto.Email,
-                FullName = dto.FullName
-            };
+            var user = _mapper.Map<User>(dto);
 
             var result = await _usermanager.CreateAsync(user, dto.Password);
 
