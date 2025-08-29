@@ -19,12 +19,26 @@ builder.Services.AddDbContext<UserAuthDbContext>(options =>
 // 2) Identity (no UI)
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
-    // Keep defaults for now (we’ll tweak password rules later if you want)
+    // Password rules
+    options.Password.RequiredLength = 8;
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = false;
+
+    // User
+    options.User.RequireUniqueEmail = true;
+
+    // Lockout (brute-force protection)
+    options.Lockout.MaxFailedAccessAttempts = 3;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.AllowedForNewUsers = true;
+
+    // Email confirmation (turn true in production)
+    options.SignIn.RequireConfirmedEmail = true;
 })
 .AddEntityFrameworkStores<UserAuthDbContext>()
-.AddDefaultTokenProviders();
-
-
+.AddDefaultTokenProviders(); // it is necessary to generate tokens for reset pass and email confirmation
 
 
 
@@ -52,7 +66,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 
-//Afdded the JwtService dfor creating tokens in this so that controllers can use this to 
+//Added the JwtService for creating tokens in this so that controllers can use this to 
 //create the tokens
 builder.Services.AddScoped<JwtService>();
 

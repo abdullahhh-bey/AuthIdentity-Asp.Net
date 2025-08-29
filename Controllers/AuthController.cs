@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using UserAuthManagement.DTO;
 using UserAuthManagement.Modals;
 using UserAuthManagement.Roles;
@@ -87,6 +88,29 @@ namespace UserAuthManagement.Controllers
         {
             return Ok("Hello, Admin!");
         }
+
+
+        //Validations
+
+        [HttpPost("change-password")]
+        [Authorize(Roles = "Student , Admin , COD , Advisor , Teacher")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO dto)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // get user id from token
+            var user = await _usermanager.FindByIdAsync(userId);
+            if (user == null)
+                return BadRequest("No User");
+
+            var result = await _usermanager.ChangePasswordAsync(user, dto.CurrentPassword, dto.NewPassword);
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
+            return Ok("Password Changed Successfully!");
+        }
+
+
+
+
 
 
     }
