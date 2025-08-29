@@ -21,6 +21,9 @@ namespace UserAuthManagement.Mapping
             CreateMap<Student, StudentInfoDTO>(); //ENTITY -> DTO
             CreateMap<CreateStudentDTO, Student>(); //DTO -> ENTITY
 
+            CreateMap<Teacher, TeacherInfoDTO>(); // Get method
+            CreateMap<CreateTeacherDTO, Teacher>(); //Post method
+            CreateMap<Teacher, TeacherDetailsDTO>();
         }
     }
 }

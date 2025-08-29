@@ -13,6 +13,7 @@ namespace UserAuthManagement.Data
            
         public DbSet<User> Students { get; set; }
         public DbSet<Student> StudentDetails { get; set; }
+        public DbSet<Teacher> TeacherDetails { get; set; }
 
     }
 }

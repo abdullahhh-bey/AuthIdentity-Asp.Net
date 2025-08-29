@@ -81,6 +81,8 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<StudentService, StudentService>();
+builder.Services.AddScoped<TeacherService, TeacherService>();
+
 
 
 var app = builder.Build();
