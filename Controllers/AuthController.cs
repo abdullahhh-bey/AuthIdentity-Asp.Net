@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.IIS;
+using Microsoft.Data.SqlClient;
 using System.Security.Claims;
 using UserAuthManagement.DTO;
 using UserAuthManagement.Modals;
@@ -36,7 +38,7 @@ namespace UserAuthManagement.Controllers
         {
             if (!Role.userRoles.Contains(dto.Role))
             {
-                return BadRequest("Invalid Role");
+                throw new ArgumentException();
             }
 
             var user = _mapper.Map<User>(dto);
@@ -46,8 +48,9 @@ namespace UserAuthManagement.Controllers
             if (!result.Succeeded)
             {
                 var errors = result.Errors.Select(e => e.Description);
-                return BadRequest(new { Errors = errors });
+                throw new InvalidOperationException();
             }
+
 
             await _usermanager.AddToRoleAsync(user, dto.Role);
             return Ok("Registered Successfully");
@@ -59,11 +62,11 @@ namespace UserAuthManagement.Controllers
         {
             var user = await _usermanager.FindByEmailAsync(dto.Email);
             if (user == null)
-                return BadRequest("Invalid Email");
+                throw new KeyNotFoundException();
 
             var checkPass = await _usermanager.CheckPasswordAsync(user, dto.Password);
             if (!checkPass)
-                return BadRequest("Incorrect Password");
+                throw new UnauthorizedAccessException();
 
             var token = await _jwtservice.GenerateToken(user);
             return Ok(token);
@@ -99,15 +102,14 @@ namespace UserAuthManagement.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // get user id from token
             var user = await _usermanager.FindByIdAsync(userId);
             if (user == null)
-                return BadRequest("No User");
+                throw new InvalidOperationException();
 
             var result = await _usermanager.ChangePasswordAsync(user, dto.CurrentPassword, dto.NewPassword);
             if (!result.Succeeded)
-                return BadRequest(result.Errors);
+                throw new ArgumentException();
 
             return Ok("Password Changed Successfully!");
         }
-
 
 
 

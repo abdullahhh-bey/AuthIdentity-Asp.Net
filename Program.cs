@@ -7,6 +7,7 @@ using UserAuthManagement.Data;
 using UserAuthManagement.Modals;
 using UserAuthManagement.Roles;
 using UserAuthManagement.Services;
+using UserAuthManagement.Services.ErrorController;
 using YourApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -82,7 +83,9 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<StudentService, StudentService>();
 builder.Services.AddScoped<TeacherService, TeacherService>();
+builder.Services.AddExceptionHandler<GlobalErrorHandling>();
 
+builder.Services.AddProblemDetails(); 
 
 
 var app = builder.Build();
@@ -114,6 +117,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+
+app.UseExceptionHandler(); 
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

@@ -101,6 +101,16 @@ namespace UserAuthManagement.Services
                 UpdateTeacher.Description = dto.Description; 
             }
 
+            if (dto.Salary.HasValue)
+            {
+                UpdateTeacher.Salary = dto.Salary.Value;
+            }
+
+            if (dto.Grade.HasValue)
+            {
+                UpdateTeacher.Grade = dto.Grade.Value;
+            }
+
             if (!string.IsNullOrEmpty(dto.Gender))
             {
                 UpdateTeacher.Gender = dto.Gender;
@@ -123,7 +133,7 @@ namespace UserAuthManagement.Services
 
         public async Task<bool> RemoveTeacher(string email)
         {
-            var teacher = await _context.TeacherDetails.FindAsync(email);
+            var teacher = await _context.TeacherDetails.SingleOrDefaultAsync(s => s.Email == email);
             if (teacher == null)
                 return false;
 

@@ -64,7 +64,7 @@ namespace UserAuthManagement.Controllers
             try
             {
                 var teacher = await _teacherService.GetTeacherById(id);
-                if(teacher == null)
+                if(teacher.Name == "")
                     return NotFound();
 
                 return Ok(teacher);
@@ -83,7 +83,7 @@ namespace UserAuthManagement.Controllers
             try
             {
                 var teacher = await _teacherService.GetTeacherDetailsById(id);
-                if (teacher == null)
+                if (teacher.Name == "")
                     return NotFound();
 
                 return Ok(teacher);
