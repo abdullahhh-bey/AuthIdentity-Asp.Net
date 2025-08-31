@@ -24,6 +24,11 @@ namespace UserAuthManagement.Mapping
             CreateMap<Teacher, TeacherInfoDTO>(); // Get method
             CreateMap<CreateTeacherDTO, Teacher>(); //Post method
             CreateMap<Teacher, TeacherDetailsDTO>();
+
+
+            CreateMap<Advisor, AdvisorInfoDTO>(); // Get method
+            CreateMap<CreateAdvisorDTO, Advisor>(); //Post method
+            CreateMap<Advisor, AdvisorDetailsDTO>();
         }
     }
 }

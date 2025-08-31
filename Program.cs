@@ -5,6 +5,7 @@ using System.Data;
 using System.Text;
 using UserAuthManagement.Data;
 using UserAuthManagement.Modals;
+using UserAuthManagement.Repository;
 using UserAuthManagement.Roles;
 using UserAuthManagement.Services;
 using UserAuthManagement.Services.ErrorController;
@@ -83,9 +84,11 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<StudentService, StudentService>();
 builder.Services.AddScoped<TeacherService, TeacherService>();
-builder.Services.AddExceptionHandler<GlobalErrorHandling>();
+builder.Services.AddScoped<IUnitofWork, UnitOfWork>();
 
+builder.Services.AddExceptionHandler<GlobalErrorHandling>();
 builder.Services.AddProblemDetails(); 
+
 
 
 var app = builder.Build();
