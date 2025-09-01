@@ -8,6 +8,7 @@ using UserAuthManagement.Modals;
 using UserAuthManagement.Repository;
 using UserAuthManagement.Roles;
 using UserAuthManagement.Services;
+using UserAuthManagement.Services.EmailService;
 using UserAuthManagement.Services.ErrorController;
 using YourApi.Services;
 
@@ -37,7 +38,7 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     options.Lockout.AllowedForNewUsers = true;
 
     // Email confirmation (turn true in production)
-    options.SignIn.RequireConfirmedEmail = true;
+    options.SignIn.RequireConfirmedEmail = false;
 })
 .AddEntityFrameworkStores<UserAuthDbContext>()
 .AddDefaultTokenProviders(); // it is necessary to generate tokens for reset pass and email confirmation
@@ -92,6 +93,9 @@ builder.Services.AddScoped<IUnitofWork, UnitOfWork>();
 
 builder.Services.AddExceptionHandler<GlobalErrorHandling>();
 builder.Services.AddProblemDetails();
+
+//added this foruse in controller
+builder.Services.AddScoped<EmailService>();
 
 
 
