@@ -80,7 +80,7 @@ namespace UserAuthManagement.Services
         public async Task<bool> RemoveAdvisor(string email)
         {
             var check = await _unitofwork.AdvisorRepository.DeleteAdvisor(email);
-            if (check)
+            if (!check)  
                 return false;
 
             await _unitofwork.CompleteAsync();

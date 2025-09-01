@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using UserAuthManagement.Data;
 using UserAuthManagement.DTO;
+using UserAuthManagement.Modals;
 
 namespace UserAuthManagement.Repository
 {
@@ -10,7 +11,7 @@ namespace UserAuthManagement.Repository
         private readonly UserAuthDbContext _context;
         private readonly IMapper _mapper;
 
-        public AdvisorRepository(UserAuthDbContext context, IMapper mapper) : base()
+        public AdvisorRepository(UserAuthDbContext context, IMapper mapper) 
         {
              _context = context;
              _mapper = mapper;
@@ -19,11 +20,15 @@ namespace UserAuthManagement.Repository
 
         public async Task<bool> AddAdvisor(CreateAdvisorDTO dto)
         {
-            var a = await _context.AdvisorDetails.SingleOrDefaultAsync(a => a.Email == dto.Email);
-            if(a == null)
+            // Check duplicate email
+            var exists = await _context.AdvisorDetails.AnyAsync(a => a.Email == dto.Email);
+            if (exists)
                 return false;
 
-            await _context.AdvisorDetails.AddAsync(a);
+            // Map DTO → Entity
+            var advisorEntity = _mapper.Map<Advisor>(dto);
+
+            await _context.AdvisorDetails.AddAsync(advisorEntity);
             return true;
         }
 
@@ -89,7 +94,7 @@ namespace UserAuthManagement.Repository
                 updatedAdvisor.Name = dto.Name;
             }
 
-            if (dto.AdvisedCourses.Count > 0)
+            if (!string.IsNullOrEmpty(dto.AdvisedCourses))
             {
                 updatedAdvisor.AdvisedCourses = dto.AdvisedCourses;
             }

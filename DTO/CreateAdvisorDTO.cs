@@ -12,7 +12,7 @@ namespace UserAuthManagement.DTO
         [Required]
         public string Gender { get; set; } = string.Empty;
         [Required]
-        public List<string> AdvisedCourses { get; set; } = new List<string>();
+        public string AdvisedCourses { get; set; } = string.Empty;
         [Required]
         public Int64 Salary { get; set; }
     }

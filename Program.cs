@@ -84,10 +84,14 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<StudentService, StudentService>();
 builder.Services.AddScoped<TeacherService, TeacherService>();
+
+// Program.cs
+builder.Services.AddScoped<AdvisorService, AdvisorService>();
+builder.Services.AddScoped<IAdvisorRepository, AdvisorRepository>();
 builder.Services.AddScoped<IUnitofWork, UnitOfWork>();
 
 builder.Services.AddExceptionHandler<GlobalErrorHandling>();
-builder.Services.AddProblemDetails(); 
+builder.Services.AddProblemDetails();
 
 
 

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UserAuthManagement.DTO;
+using UserAuthManagement.Modals;
 using UserAuthManagement.Services;
 
 namespace UserAuthManagement.Controllers
@@ -24,10 +25,11 @@ namespace UserAuthManagement.Controllers
         {
             var dto = await _advisor.GetAllAdvisor();
             if (dto.Count == 0)
-                throw new KeyNotFoundException();
+                return Ok("No Advisor Found");
             
             return Ok(dto);
         }
+
 
         [HttpGet("list-advisor-details")]
         [Authorize(Roles = "Admin, COD")]
@@ -35,7 +37,7 @@ namespace UserAuthManagement.Controllers
         {
             var dto = await _advisor.GetAllAdvisorDetails();
             if (dto.Count == 0)
-                throw new KeyNotFoundException();
+                return Ok("No Advisor Found");
 
             return Ok(dto);
         }
@@ -70,16 +72,22 @@ namespace UserAuthManagement.Controllers
         [Authorize(Roles = "Admin , COD")]
         public async Task<IActionResult> CreateAdvisorAPI([FromBody] CreateAdvisorDTO dto)
         {
-            var check = await _advisor.CreateAdvisor(dto);
-            if(!check)
-                throw new ArgumentException();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            return Ok("Advisor Created Successfully!"); 
+            var check = await _advisor.CreateAdvisor(dto);
+            if (!check)
+                return BadRequest("Email Already Exists");
+
+            return Ok("Created");
+ 
         }
 
 
 
-        [HttpPost("update-advisor/{id}")]
+        [HttpPut("update-advisor/{id}")]
         [Authorize(Roles = "Admin , COD")]
         public async Task<IActionResult> UpdateAdvisorAPI(int id, [FromBody] UpdateAdvisorDTO dto)
         {
@@ -91,7 +99,7 @@ namespace UserAuthManagement.Controllers
         }
 
 
-        [HttpPost("remove-advisor/{email}")]
+        [HttpDelete("remove-advisor/{email}")]
         [Authorize(Roles = "Admin ")]
         public async Task<IActionResult> RemoveAdvisorAPI(string email)
         {
