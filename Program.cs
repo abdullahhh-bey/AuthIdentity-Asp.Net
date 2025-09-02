@@ -81,7 +81,22 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddAutoMapper(typeof(Program));
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("OnlyRead", policy =>
+    {
+        policy.RequireClaim("permission", "read-only");
+    });
+
+    
+    options.AddPolicy("CanGrade", policy =>
+    {
+        policy.RequireRole("Teacher")
+        .RequireClaim("permission", "can-grade");
+    });
+
+
+});
 
 builder.Services.AddScoped<StudentService, StudentService>();
 builder.Services.AddScoped<TeacherService, TeacherService>();

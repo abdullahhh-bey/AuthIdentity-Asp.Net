@@ -48,13 +48,16 @@ namespace UserAuthManagement.Controllers
                 throw new ArgumentException("Invalid Role");
             }
 
+            var check = await _usermanager.FindByEmailAsync(dto.Email);
+            if (check != null)
+                throw new ArgumentException("Emal Already in use");
+
             var user = _mapper.Map<User>(dto);
 
             var result = await _usermanager.CreateAsync(user, dto.Password);
 
             if (!result.Succeeded)
             {
-                var errors = result.Errors.Select(e => e.Description);
                 throw new InvalidOperationException();
             }
             await _usermanager.AddToRoleAsync(user, dto.Role);

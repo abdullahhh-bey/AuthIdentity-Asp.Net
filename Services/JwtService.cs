@@ -34,6 +34,18 @@ namespace YourApi.Services
             var roles = await _userManager.GetRolesAsync(user);
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
+
+            if(roles.Contains("Student"))
+            {
+                claims.Add(new Claim("permission" , "read-only"));
+            }
+
+            if(roles.Contains("Teacher"))
+            {
+                claims.Add(new Claim("permission", "read-only"));
+                claims.Add(new Claim("permission", "can-grade"));
+            }
+
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var token = new JwtSecurityToken(
                 issuer: jwtSettings["Issuer"],

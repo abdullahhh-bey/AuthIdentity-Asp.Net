@@ -21,6 +21,7 @@ namespace UserAuthManagement.Controllers
 
         [HttpGet("list-students")]
         [Authorize(Roles = "Admin, Teacher, Advisor, COD")]
+        [Authorize(Policy = "CanGrade")]
         public async Task<IActionResult> GetStudentApi()
         {
             try
